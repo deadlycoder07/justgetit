@@ -7,6 +7,4 @@ urlpatterns = [
 	path(r'form2/', views.form2, name='form2'),
 	path(r'form3/', views.form3, name='form3'),
 	path(r'obgenerate/',views.orderform,name="ob"),
-	path(r'obtest/',views.obtest, name='obtest'),
-
 ]
