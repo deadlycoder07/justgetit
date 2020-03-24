@@ -1,0 +1,191 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+{% csrf_token %}
+
+<div class="container text-center">
+	<h1>Add Order Details</h1>
+</div>
+
+<br>
+<br>
+
+
+<form class= "" action="" method="POST" id="myForm">
+	<div class="form-group col">
+     {% csrf_token %}
+		<p><label for="id_orderno">Order No:</label> <input type="text" name="orderno" maxlength="100" required="" id="id_orderno"></p>
+
+		<p><label for="id_stno">Style No:</label> <input type="text" name="stno" maxlength="100" required="" id="id_stno"></p>
+
+		<p><label for="id_lineno">Line No:</label> <input type="text" name="lineno" maxlength="100" required="" id="id_lineno"></p>
+
+		<p><label for="id_order_quantity">Order quantity:</label> <input type="number" name="order_quantity" required="" id="id_order_quantity"></p>
+
+		<p><label for="id_mins_shift">Mins per shift:</label> <input type="number" name="mins_shift" required="" id="id_mins_shift"></p>
+
+		<p><label for="id_capacity">Capacity:</label> <input type="number" name="capacity" required="" id="id_capacity"></p>
+
+		<p><label for="id_expected_skill_level">Expected skill level:</label> <input type="number" name="expected_skill_level" required="" id="id_expected_skill_level"></p>
+
+		<p><label for="id_target">Target:</label> <input type="number" name="target" required="" id="id_target"></p>
+
+		 <p>
+        <label for="id_fabric">Fabric: </label>
+        <select name="fabric" id="id_fabric">
+          <option value="woven">Woven</option>
+          <option value="knit">Knit</option>
+          <option value="others">Others</option>
+
+        </select>
+
+      </p>
+
+      <p>
+        <label for="id_wash">Wash:</label> 
+        <select name="wash" id="id_wash">
+          <option value="non-wash">Non-Wash</option>
+          <option value="wash">Wash</option>
+        </select>
+      </p>
+
+      <p><label for="id_category">Category:</label> <select name="category" required="" id="id_category">
+        <option value="" selected="">---------</option>
+        <option value="1">Fabrics</option>
+        <option value="2">Home & Living</option>
+        <option value="3">Kids</option>
+        <option value="4">Mens</option>
+        <option value="5">Women</option>
+      </select></p>
+
+        <p><label for="id_subcategory">Subcategory:</label> <select name="subcategory" id="id_subcategory">
+        <option value="" selected="">---------</option>
+        {% for i in data %}
+          <option value="{{ i.pk }}">{{ i.name }}</option>
+         {% endfor %}
+
+
+      </select></p>
+
+      <p><label for="id_supercategory">Supercategory:</label> <select name="supercategory"  id="id_supercategory">
+        <option value="" selected="">---------</option>
+
+        {% for i in data %}
+          <option value="{{ i.pk }}">{{ i.name }}</option>
+         {% endfor %}
+
+      </select></p>
+
+      <p><label for="id_styletype">Styletype:</label> <select name="styletype" id="id_styletype">
+        <option value="formal">Formal</option>
+        <option value="casual">Casual</option>
+
+      </select></p>
+
+     <p>
+		<label for="id_comp">Components :</label> <select name="comp" id="id_comp">
+		<option value="1">Common</option>
+		<option value="2">Lapels</option>
+		<option value="3">Sleeve Cuffs</option>
+		<option value="4">Pockets</option>
+		<option value="5">Facing</option>
+		<option value="6">Misc</option>
+		</select>
+	</p>
+
+
+	<p><label for="id_attribute">Attribute:</label> <select name="attribute" id="id_attribute">
+		<option value="" selected="">---------</option>
+
+		{% for i in data %}
+
+		{% csrf_token %}
+		<option value="{{ i.name }}">{{ i.name }}</option>
+		{% endfor %}
+	</select></p>
+
+	<p>
+		
+	<input type="checkbox" name="">ABC
+	</p>
+
+
+		<button class="btn btn-primary" id="id_submit" type="submit" href="/" ,="" value="Submit">Submit</button>
+
+	</div>
+
+
+
+
+</form>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  
+  <script>
+    $("#id_category").change(function () {
+      var cat = $("#id_category").val();
+
+      $.ajax({
+        type: "POST",
+        url: "/form3/",
+        data: {
+          'category': cat,
+          'csrfmiddlewaretoken': "{{ csrf_token }}"
+        },
+        success: function (data) {  
+          for(var i=0; i < data["sub"].length; i++){
+            $("#id_subcategory").append(`<option value="${data['sub'][i]}"> ${data['sub'][i]} </option>`)
+          }
+   
+        }
+      });
+
+    });
+
+    $("#id_subcategory").change(function () {
+      var subcat = $("#id_subcategory").val();
+
+      $.ajax({
+        type: "POST",
+        url: "/form3/",
+        data: {
+          'subcategory': subcat,
+          'csrfmiddlewaretoken': "{{ csrf_token }}"
+        },
+        success: function (data) {  
+          for(var i=0; i < data["superc"].length; i++){
+            $("#id_supercategory").append(`<option value="${i+1}"> ${data['superc'][i]} </option>`)
+          }
+            
+        }
+      });
+
+    });
+
+
+		$("#id_comp").change(function () {
+			var comp = $("#id_comp").val();
+
+			$.ajax({
+				type: "POST",
+				url: "/form3/",
+				data: {
+					'component': comp,
+					'csrfmiddlewaretoken': "{{ csrf_token }}"
+				},
+				success: function (data) {  
+					for(var i=0; i < data["sub"].length; i++){
+						$("#id_attribute").append(`<option value="${data['sub'][i]}"> ${data['sub'][i]} </option>`)
+					}
+	 
+				}
+			});
+
+		});
+
+</script>
+
+
+
+
+	{% endblock %}

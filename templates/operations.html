@@ -1,0 +1,120 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+{% csrf_token %}
+
+<div class="container text-center">
+	<h1>Add Operations</h1>
+</div>
+
+<br>
+<br>
+
+
+<form class= "", action="", method="POST", id="myForm">
+	<div class="form-group col">
+
+			<div>
+
+				<p><label for="id_pfmno">PFM No.:</label> 
+					<select name="pfmno" required="" id="id_pfmno">
+							<option value="" selected="">---------</option>
+
+							{% for i in pfmnos %}
+							<option value="{{ i.pfmno }}">{{ i.pfmno }}</option>
+							{% endfor %}
+
+
+						</select></p>
+				<p>
+					<label for="id_styleno">Styleno:</label> <input type="text" name="styleno" value="" maxlength="100" required="" id="id_styleno"></p>
+					<p>
+						<label for="id_comp">Components :</label> <select name="comp" required="" id="id_comp">
+
+
+							<option value="1">Common</option>
+
+							<option value="2">Lapels</option>
+
+							<option value="3">Sleeve Cuffs</option>
+
+							<option value="4">Pockets</option>
+
+							<option value="5">Facing</option>
+
+							<option value="6">Misc</option>
+
+						</select></p>
+						<p><label for="id_attribute">Attribute:</label> <select name="attribute" required="" id="id_attribute">
+							<option value="" selected="">---------</option>
+
+							{% for i in data %}
+
+							{% csrf_token %}
+							<option value="{{ i.name }}">{{ i.name }}</option>
+							{% endfor %}
+
+
+						</select></p>
+						<p><label for="id_operations">Operations:</label> <input type="text" name="operations" maxlength="100" required="" id="id_operations"></p>
+						<p><label for="id_complexity">Complexity:</label> <input type="number" name="complexity" value="1" required="" id="id_complexity"></p>
+						<p><label for="id_spi">SPI:</label> <input type="number" name="spi" value="12" required="" id="id_spi"></p>
+						<p><label for="id_stitch_length">Stitch length:</label> <input type="number" name="stitch_length" value="3" required="" id="id_stitch_length"></p>
+						<p><label for="id_thread_consumption">Thread consumption:</label> <input type="number" name="thread_consumption" required="" id="id_thread_consumption"></p>
+						<p><label for="id_machine_auto">Machine auto:</label> <input type="text" name="machine_auto" value="SNLS" maxlength="100" required="" id="id_machine_auto"></p>
+						<p><label for="id_work_aid">Work aid:</label> <input type="text" name="work_aid" value="BINDER" maxlength="100" required="" id="id_work_aid"></p>
+						<p><label for="id_smv">SMV:</label> <input type="number" name="smv" value="0.33" step="0.00001" required="" id="id_smv"></p>
+						<p><label for="id_allowance">Allowance:</label> <input type="number" name="allowance" step="0.00001" required="" id="id_allowance"></p>
+						<p><label for="id_sam">SAM:</label> <input type="number" name="sam" value="0.53" step="0.00001" required="" id="id_sam"></p>
+						<p><label for="id_ct">CT:</label> <input type="number" name="ct" value="0.88" step="0.00001" required="" id="id_ct"></p>
+						<p><label for="id_grade">Grade:</label> <input type="text" name="grade" maxlength="100" required="" id="id_grade"></p>
+					</div>
+
+
+			<br>
+
+
+			<button class="btn btn-primary" id="id_submit" type="submit" href="/" value="Submit">Submit</button>
+
+
+			<br>
+			<br>
+
+
+		</form>
+	</div>
+
+</body>
+
+
+
+ <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	
+	<script>
+		$("#id_comp").change(function () {
+			var comp = $("#id_comp").val();
+
+			$.ajax({
+				type: "POST",
+				url: "/form2/",
+				data: {
+					'component': comp,
+					'csrfmiddlewaretoken': "{{ csrf_token }}"
+				},
+				success: function (data) {  
+					for(var i=0; i < data["sub"].length; i++){
+						$("#id_attribute").append(`<option value="${data['sub'][i]}"> ${data['sub'][i]} </option>`)
+					}
+	 
+				}
+			});
+
+		});
+
+
+	</script> 
+
+
+	{% endblock %}
+
+

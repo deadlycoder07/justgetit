@@ -1,0 +1,202 @@
+{% extends 'base2.html' %}
+
+{% block content %}
+{% csrf_token %}
+
+<div class="container text-center">
+  <h1>Generate PFM</h1>
+</div>
+
+<br>
+<br>
+
+
+<form class= "", action="", method="POST", id="myForm">
+  <div class="form-group col">
+    {% csrf_token %}
+
+ <p>
+        <label for="id_pfmno">PFM No.</label>
+        <input type="text"  name="pfmno" id="id_pfmno">
+      </p>
+
+      <p>
+        <label for="id_factory">Factory: </label>
+        <select name="factory" id="id_factory">
+          <option value="factory1">Factory1</option>
+          <option value="factory1">Factory2</option>
+          <option value="factory1">Factory3</option>
+          <option value="factory1">Factory4</option>
+          <option value="factory1">Factory5</option>
+        </select>
+
+      </p>
+
+
+
+      <p>
+        <label for="id_fabric">Fabric: </label>
+        <select name="fabric" id="id_fabric">
+          <option value="woven">Woven</option>
+          <option value="knit">Knit</option>
+          <option value="others">Others</option>
+
+        </select>
+
+      </p>
+
+      <p>
+        <label for="id_wash">Wash:</label> 
+        <select name="wash" id="id_wash">
+          <option value="non-wash">Non-Wash</option>
+          <option value="wash">Wash</option>
+        </select>
+      </p>
+
+      <p><label for="id_category">Category:</label>
+          <select name="category" required="" id="id_category">
+        <option value="" selected="">---------</option>
+
+        <option value="1">Fabrics</option>
+
+        <option value="2">Home & Living</option>
+
+        <option value="3">Kids</option>
+
+        <option value="4">Mens</option>
+
+        <option value="5">Women</option>
+
+      </select></p>
+
+
+     
+
+      <p><label for="id_subcategory">Subcategory:</label> <select name="subcategory"  id="id_subcategory">
+        <option value="" selected="">---------</option>
+        {% for i in data %}
+          <option value="{{ i.pk }}">{{ i.name }}</option>
+         {% endfor %}
+
+
+      </select></p>
+
+      <p><label for="id_supercategory">Supercategory:</label> <select name="supercategory"  id="id_supercategory">
+        <option value="" selected="">---------</option>
+
+        {% for i in data %}
+          <option value="{{ i.pk }}">{{ i.name }}</option>
+         {% endfor %}
+
+      </select></p>
+
+      <p><label for="id_styletype">Styletype:</label> <select name="styletype" id="id_styletype">
+        <option value="formal">Formal</option>
+        <option value="casual">Casual</option>
+
+      </select></p>
+
+      <br>
+
+
+      <button class="btn btn-primary" id="id_submit" type="submit" href="/", value="Submit">Submit</button>
+
+
+      <br>
+      <br>
+
+
+    </form>
+  </div>
+
+</body>
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  
+  <script>
+    $("#id_category").change(function () {
+      var cat = $("#id_category").val();
+
+      $.ajax({
+        type: "POST",
+        url: "/form1/",
+        data: {
+          'category': cat,
+          'csrfmiddlewaretoken': "{{ csrf_token }}"
+        },
+        success: function (data) {  
+          for(var i=0; i < data["sub"].length; i++){
+            $("#id_subcategory").append(`<option value="${data['sub'][i]}"> ${data['sub'][i]} </option>`)
+          }
+   
+        }
+      });
+
+    });
+
+    $("#id_subcategory").change(function () {
+      var subcat = $("#id_subcategory").val();
+
+      $.ajax({
+        type: "POST",
+        url: "/form1/",
+        data: {
+          'subcategory': subcat,
+          'csrfmiddlewaretoken': "{{ csrf_token }}"
+        },
+        success: function (data) {  
+          for(var i=0; i < data["superc"].length; i++){
+            $("#id_supercategory").append(`<option value="${i+1}"> ${data['superc'][i]} </option>`)
+          }
+            
+        }
+      });
+
+    });
+
+
+
+    $("#id_submit").click(function () {
+      var pf = $('#id_pfmno').val();
+      var factory = $('#id_factory').find(":selected").text();
+      var fabric = $('#id_fabric').find(":selected").text();
+      var wash = $('#id_wash').find(":selected").text();
+      var category = $('#id_category').find(":selected").text();
+      var subcategory = $('#id_subcategory').find(":selected").text();
+      var supercategory = $('#id_supercategory').find(":selected").text();
+
+      var stylet = $('#id_styletype').find(":selected").text();
+
+      $.ajax({
+        url: '/form1/',
+        data: {
+          'pf': pf,
+          'factory': factory,
+          'fabric': fabric,
+          'wash':wash,
+          'category': category,
+          'subcategory': subcategory,
+          'supercategory': supercategory,
+          'styletype':stylet
+        },
+        success: function () {
+         
+            alert("A user with this username already exists.");
+          
+        }
+      });
+
+    });
+
+  </script>
+
+
+
+
+
+  {% endblock %}
+
+
+
